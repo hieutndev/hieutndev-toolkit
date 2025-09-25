@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "nextage-toolkit"
+    "url": "https://github.com/hieutndev/nextage-toolkit.git"
   },
   "author": "hieutndev",
   "license": "ISC",
@@ -33,5 +33,11 @@
   "exports": {
     "./hooks/*": "./dist/hooks/*.js",
     "./utils/*": "./dist/utils/*.js"
+  },
+  "typesVersions": {
+    "*": {
+      "hooks/*": ["dist/hooks/*.d.ts"],
+      "utils/*": ["dist/utils/*.d.ts"]
+    }
   }
 }
