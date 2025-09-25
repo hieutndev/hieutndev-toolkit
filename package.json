@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup hooks/* utils/* --dts --format esm,cjs"
+    "build": "tsup hooks/* utils/* --dts --format esm,cjs --outDir dist --shims"
   },
   "repository": {
     "type": "git",
@@ -29,5 +29,9 @@
     "@types/react-dom": "^18",
     "tsup": "^8",
     "typescript": "^5"
+  },
+  "exports": {
+    "./hooks/*": "./dist/hooks/*.js",
+    "./utils/*": "./dist/utils/*.js"
   }
 }
