@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup hooks/* utils/* --dts --format esm,cjs --outDir dist --shims"
+    "build": "tsup hooks/* --dts --format esm,cjs --outDir dist/hooks && tsup utils/* --dts --format esm,cjs --outDir dist/utils"
   },
   "repository": {
     "type": "git",
