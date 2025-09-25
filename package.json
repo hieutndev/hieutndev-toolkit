@@ -1,0 +1,33 @@
+{
+  "name": "nextage-toolkit",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup hooks/* utils/* --dts --format esm,cjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "nextage-toolkit"
+  },
+  "author": "hieutndev",
+  "license": "ISC",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "dependencies": {
+    "cookies-next": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "tsup": "^8",
+    "typescript": "^5"
+  }
+}
