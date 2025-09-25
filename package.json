@@ -8,7 +8,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup hooks/* --dts --format esm,cjs --outDir dist/hooks && tsup utils/* --dts --format esm,cjs --outDir dist/utils"
+    "clean": "node scripts/clean.js",
+    "build": "yarn clean && tsup hooks/* --dts --format esm,cjs --outDir dist/hooks && tsup utils/* --dts --format esm,cjs --outDir dist/utils && node scripts/generate-index.js",
+    "build:watch": "yarn clean && tsup hooks/* utils/* --dts --format esm,cjs --outDir dist --watch && node scripts/generate-index.js"
   },
   "repository": {
     "type": "git",
