@@ -1,6 +1,6 @@
-declare const useWindowSize: () => {
+declare function useWindowSize(): {
     width: number;
     height: number;
 };
 
-export { useWindowSize as default };
+export { useWindowSize };

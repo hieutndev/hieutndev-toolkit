@@ -21,11 +21,11 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // hooks/useWindowSize.ts
 var useWindowSize_exports = {};
 __export(useWindowSize_exports, {
-  default: () => useWindowSize_default
+  useWindowSize: () => useWindowSize
 });
 module.exports = __toCommonJS(useWindowSize_exports);
 var import_react = require("react");
-var useWindowSize = () => {
+function useWindowSize() {
   const [screenSize, setScreenSize] = (0, import_react.useState)({
     width: window.innerWidth,
     height: window.innerHeight
@@ -41,5 +41,8 @@ var useWindowSize = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   return screenSize;
-};
-var useWindowSize_default = useWindowSize;
+}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  useWindowSize
+});
