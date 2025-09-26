@@ -63,7 +63,7 @@ export type ScrollProps = {
  * const { scrollDir, scrollPosition } = useScroll({ axis: Axis.Y, thr: 10 });
  * ```
  */
-function useScroll(props: ScrollProps = {}): ScrollInfo {
+export function useScroll(props: ScrollProps = {}): ScrollInfo {
     const {
         target = typeof window !== "undefined" ? window : undefined,
         thr = 0,
@@ -168,6 +168,4 @@ function useScroll(props: ScrollProps = {}): ScrollInfo {
     }, [target, axis, updateScrollDir]);
 
     return { scrollDir, scrollPosition };
-}
-
-export default useScroll;
+};
