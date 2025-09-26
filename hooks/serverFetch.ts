@@ -1,6 +1,6 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 
-interface nonAuthFetchOptions {
+interface serverFetchOptions {
     method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
     headers?: HeadersInit;
     body?: any;
@@ -10,7 +10,7 @@ interface nonAuthFetchOptions {
 
 export async function serverFetch<T>(
     endpoint: string,
-    options: nonAuthFetchOptions = {}
+    options: serverFetchOptions = {}
 ): Promise<T> {
     const {
         method = "GET",
