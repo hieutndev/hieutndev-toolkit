@@ -111,6 +111,38 @@ export function useFetch<TResponse = any, TBody = any>(
 	fetch: (overrideOptions?: FetchOptions<TBody>) => Promise<void>;
 };
 
+/**
+ * Custom React hook for performing HTTP requests with flexible options and automatic token refresh handling.
+ *
+ * This hook provides a convenient way to fetch data from an API endpoint, supporting query parameters,
+ * custom request options, and automatic handling of authentication tokens (including refresh on 401).
+ * It manages loading, error, and response state, and exposes a `fetch` function for manual invocation.
+ *
+ * @template TResponse - The expected response data type.
+ * @template TBody - The request body type.
+ *
+ * @param url - The endpoint URL to fetch data from.
+ * @param searchParamsOrOptions - Either search parameters to append to the URL or fetch options.
+ * @param options - Additional fetch options if search parameters are provided as the second argument.
+ *
+ * @returns An object containing:
+ * - `data`: The response data or `null`.
+ * - `loading`: Boolean indicating if the request is in progress.
+ * - `error`: Error message or `null`.
+ * - `statusCode`: HTTP status code or `null`.
+ * - `fetch`: Function to manually trigger the fetch with optional override options.
+ *
+ * @example
+ * ```tsx
+ * const { data, loading, error, fetch } = useFetch<User[]>('/api/users');
+ * ```
+ *
+ * @remarks
+ * - Automatically attaches `Authorization` header using `access_token` cookie.
+ * - If a 401 response is received and a `refresh_token` cookie exists, attempts to refresh the token and retry.
+ * - Redirects to sign-in page on permission errors or expired refresh tokens.
+ * - Memoizes options and search parameters to prevent unnecessary re-fetches.
+ */
 export function useFetch<TResponse = any, TBody = any>(
 	url: string,
 	searchParamsOrOptions?: SearchParams | FetchOptions<TBody>,

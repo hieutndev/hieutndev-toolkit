@@ -20,41 +20,14 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // utils/date.ts
 var date_exports = {};
 __export(date_exports, {
-  formatDate: () => formatDate,
-  formatTime: () => formatTime,
+  convertSecondsToTimeString: () => convertSecondsToTimeString,
+  getDateRange: () => getDateRange,
   getDiffTime: () => getDiffTime,
-  getLastTimeString: () => getLastTimeString,
-  getMonthYearName: () => getMonthYearName
+  getTimeAgoString: () => getTimeAgoString
 });
 module.exports = __toCommonJS(date_exports);
-function formatDate(isoString, format = "fullDate") {
-  const date = new Date(isoString);
-  const pad = (num) => num.toString().padStart(2, "0");
-  const hours = pad(date.getHours());
-  const minutes = pad(date.getMinutes());
-  const seconds = pad(date.getSeconds());
-  const day = pad(date.getDate());
-  const month = pad(date.getMonth() + 1);
-  const year = date.getFullYear();
-  switch (format) {
-    case "fullDate":
-      return `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
-    case "onlyDate":
-      return `${day}/${month}/${year}`;
-    case "onlyMonthYear":
-      return `${month}/${year}`;
-    case "onlyDateReverse":
-      return `${year}-${month}-${day}`;
-    case "onlyTime":
-      return `${hours}:${minutes}:${seconds}`;
-  }
-}
-function getMonthYearName(isoString) {
-  const date = new Date(isoString);
-  return date.toLocaleDateString("en-US", { year: "numeric", month: "long" });
-}
-function getLastTimeString(isoString) {
-  const lastUpdatedTime = new Date(isoString);
+function getTimeAgoString(isoStringTime) {
+  const lastUpdatedTime = new Date(isoStringTime);
   const currentTime = /* @__PURE__ */ new Date();
   const diffInSeconds = Math.floor((currentTime.getTime() - lastUpdatedTime.getTime()) / 1e3);
   const diffInMinutes = Math.floor(diffInSeconds / 60);
@@ -84,30 +57,66 @@ function getDiffTime(startTime, endTime) {
     seconds: diffInSeconds % 60
   };
 }
-function formatTime(seconds, format = "fullTime") {
+function convertSecondsToTimeString(seconds, format = "hms") {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor(seconds % 3600 / 60);
   const remainingSeconds = seconds % 60;
   switch (format) {
-    case "fullTime":
+    case "hms":
       return `${hours > 0 ? `${hours}h ` : ""}${minutes > 0 ? `${minutes}m ` : ""}${remainingSeconds}s`;
-    case "onlyHours":
+    case "h":
       return `${hours}h`;
-    case "onlyMinutes":
+    case "m":
       return `${minutes}m`;
-    case "onlySeconds":
+    case "s":
       return `${remainingSeconds}s`;
-    case "onlyHourAndMinute":
+    case "hm":
       return `${hours}h ${minutes}m`;
-    case "onlyMinuteAndSecond":
+    case "ms":
       return `${minutes}m ${remainingSeconds}s`;
+    default:
+      return `${hours > 0 ? `${hours}h ` : ""}${minutes > 0 ? `${minutes}m ` : ""}${remainingSeconds}s`;
   }
+}
+function getDateRange(period, endDateInput) {
+  const endDate = endDateInput ? typeof endDateInput === "string" ? new Date(endDateInput) : new Date(endDateInput) : /* @__PURE__ */ new Date();
+  const startDate = new Date(endDate);
+  const previousEndDate = new Date(startDate);
+  const previousStartDate = new Date(startDate);
+  switch (period) {
+    case "24hours":
+      startDate.setDate(endDate.getDate() - 1);
+      previousEndDate.setTime(startDate.getTime());
+      previousStartDate.setDate(previousEndDate.getDate() - 1);
+      break;
+    case "7days":
+      startDate.setDate(endDate.getDate() - 7);
+      previousEndDate.setTime(startDate.getTime());
+      previousStartDate.setDate(previousEndDate.getDate() - 7);
+      break;
+    case "12months":
+      startDate.setFullYear(endDate.getFullYear() - 1);
+      previousEndDate.setTime(startDate.getTime());
+      previousStartDate.setFullYear(previousEndDate.getFullYear() - 1);
+      break;
+    case "30days":
+    default:
+      startDate.setDate(endDate.getDate() - 30);
+      previousEndDate.setTime(startDate.getTime());
+      previousStartDate.setDate(previousEndDate.getDate() - 30);
+      break;
+  }
+  return {
+    startDate: startDate.toISOString().split("T")[0],
+    endDate: endDate.toISOString().split("T")[0],
+    previousStartDate: previousStartDate.toISOString().split("T")[0],
+    previousEndDate: previousEndDate.toISOString().split("T")[0]
+  };
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  formatDate,
-  formatTime,
+  convertSecondsToTimeString,
+  getDateRange,
   getDiffTime,
-  getLastTimeString,
-  getMonthYearName
+  getTimeAgoString
 });
