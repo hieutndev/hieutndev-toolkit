@@ -148,6 +148,11 @@ export function useFetch<TResponse = any, TBody = any>(
 	searchParamsOrOptions?: SearchParams | FetchOptions<TBody>,
 	options?: FetchOptions<TBody>
 ) {
+
+	if (!BASE_URL) {
+		throw new Error("NEXT_PUBLIC_BASE_API_URL is not defined");
+	}
+
 	// Determine if the second parameter is searchParams or options
 	const isSearchParams =
 		searchParamsOrOptions &&
