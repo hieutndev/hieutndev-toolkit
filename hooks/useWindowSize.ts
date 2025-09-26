@@ -9,13 +9,13 @@ import { useState, useEffect } from "react";
  * @returns Object containing width and height of the window
  */
 export function useWindowSize() {
-    // Initialize with undefined to avoid hydration issues
+    // Initialize with default values (FULL HD Screen Size) to avoid SSR issues
     const [screenSize, setScreenSize] = useState<{
-        width: number | undefined;
-        height: number | undefined;
+        width: number;
+        height: number;
     }>({
-        width: undefined,
-        height: undefined,
+        width: 1920,
+        height: 1080,
     });
 
     useEffect(() => {

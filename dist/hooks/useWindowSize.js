@@ -27,8 +27,8 @@ module.exports = __toCommonJS(useWindowSize_exports);
 var import_react = require("react");
 function useWindowSize() {
   const [screenSize, setScreenSize] = (0, import_react.useState)({
-    width: void 0,
-    height: void 0
+    width: 1920,
+    height: 1080
   });
   (0, import_react.useEffect)(() => {
     const handleResize = () => {

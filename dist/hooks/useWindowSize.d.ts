@@ -5,8 +5,8 @@
  * @returns Object containing width and height of the window
  */
 declare function useWindowSize(): {
-    width: number | undefined;
-    height: number | undefined;
+    width: number;
+    height: number;
 };
 
 export { useWindowSize };
