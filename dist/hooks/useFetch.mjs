@@ -51,6 +51,9 @@ async function refreshToken() {
   setCookie("access_token", data.results.access_token, { path: "/" });
 }
 function useFetch(url, searchParamsOrOptions, options) {
+  if (!BASE_URL) {
+    throw new Error("NEXT_PUBLIC_BASE_API_URL is not defined");
+  }
   const isSearchParams = searchParamsOrOptions && typeof searchParamsOrOptions === "object" && !("method" in searchParamsOrOptions) && !("body" in searchParamsOrOptions) && !("headers" in searchParamsOrOptions) && !("skip" in searchParamsOrOptions) && !("options" in searchParamsOrOptions);
   const searchParams = isSearchParams ? searchParamsOrOptions : void 0;
   const rawOptions = isSearchParams ? options : searchParamsOrOptions;
