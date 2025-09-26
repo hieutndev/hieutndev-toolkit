@@ -27,8 +27,8 @@ module.exports = __toCommonJS(useWindowSize_exports);
 var import_react = require("react");
 function useWindowSize() {
   const [screenSize, setScreenSize] = (0, import_react.useState)({
-    width: window.innerWidth,
-    height: window.innerHeight
+    width: void 0,
+    height: void 0
   });
   (0, import_react.useEffect)(() => {
     const handleResize = () => {
@@ -37,6 +37,7 @@ function useWindowSize() {
         height: window.innerHeight
       });
     };
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);

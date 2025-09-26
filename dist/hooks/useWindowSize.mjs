@@ -4,8 +4,8 @@
 import { useState, useEffect } from "react";
 function useWindowSize() {
   const [screenSize, setScreenSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight
+    width: void 0,
+    height: void 0
   });
   useEffect(() => {
     const handleResize = () => {
@@ -14,6 +14,7 @@ function useWindowSize() {
         height: window.innerHeight
       });
     };
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
