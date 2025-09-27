@@ -285,7 +285,12 @@ export function useFetch<TResponse = any, TBody = any>(
 
 				const responseText = await response.text();
 
-				const errorJson = JSON.parse(responseText || '{}');
+				let errorJson: any = {};
+				try {
+					errorJson = JSON.parse(responseText || '{}');
+				} catch {
+					// If response is not valid JSON, keep errorJson as empty object
+				}
 
 				const defaultErrorMessage = "Server error occurred, please try again later or contact admin for more details";
 				const errorMessage = responseText || response.statusText || defaultErrorMessage;

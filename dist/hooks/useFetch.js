@@ -167,7 +167,11 @@ function useFetch(url, searchParamsOrOptions, options) {
       }
       if (!response.ok) {
         const responseText = await response.text();
-        const errorJson = JSON.parse(responseText || "{}");
+        let errorJson = {};
+        try {
+          errorJson = JSON.parse(responseText || "{}");
+        } catch {
+        }
         const defaultErrorMessage = "Server error occurred, please try again later or contact admin for more details";
         const errorMessage = responseText || response.statusText || defaultErrorMessage;
         setState({
