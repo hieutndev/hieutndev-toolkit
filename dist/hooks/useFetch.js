@@ -146,10 +146,12 @@ function useFetch(url, searchParamsOrOptions, options) {
         });
         if (!retryResponse.ok) {
           const errorText = await retryResponse.text();
+          const defaultErrorMessage = "Server error occurred, please try again later or contact admin for more details";
+          const errorMessage = errorText || retryResponse.statusText || defaultErrorMessage;
           setState({
             data: null,
             loading: false,
-            error: errorText || retryResponse.statusText,
+            error: errorMessage,
             statusCode: retryResponse.status
           });
           return;
@@ -166,10 +168,12 @@ function useFetch(url, searchParamsOrOptions, options) {
       if (!response.ok) {
         const responseText = await response.text();
         const errorJson = JSON.parse(responseText || "{}");
+        const defaultErrorMessage = "Server error occurred, please try again later or contact admin for more details";
+        const errorMessage = responseText || response.statusText || defaultErrorMessage;
         setState({
           data: null,
           loading: false,
-          error: responseText || response.statusText,
+          error: errorMessage,
           statusCode: response.status
         });
         if (errorJson.message === "NO_PERMISSION") {
@@ -189,7 +193,9 @@ function useFetch(url, searchParamsOrOptions, options) {
         setState({ data: null, loading: false, error: null, statusCode: null });
         window.location.href = "/sign-in?message=EXPIRED_REFRESH_TOKEN";
       } else {
-        setState({ data: null, loading: false, error: error.message, statusCode: null });
+        const defaultErrorMessage = "Server error occurred, please try again later or contact admin for more details";
+        const errorMessage = error.message || defaultErrorMessage;
+        setState({ data: null, loading: false, error: errorMessage, statusCode: null });
       }
     }
   };
