@@ -7,6 +7,7 @@ export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 interface FetchOptions<TBody> {
 	method?: HttpMethod;
+	url?: string;
 	body?: TBody;
 	headers?: HeadersInit;
 	skip?: boolean; // skip fetch on mount,
@@ -118,13 +119,17 @@ export function useFetch<TResponse = any, TBody = any>(
  * custom request options, and automatic handling of authentication tokens (including refresh on 401).
  * It manages loading, error, and response state, and exposes a `fetch` function for manual invocation.
  *
+ * Template parameters
  * @template TResponse - The expected response data type.
  * @template TBody - The request body type.
  *
- * @param url - The endpoint URL to fetch data from.
+ * Parameters
+ * @param url - The initial endpoint URL to fetch data from. This value is used unless an override is
+ * provided when calling the returned `fetch` function.
  * @param searchParamsOrOptions - Either search parameters to append to the URL or fetch options.
  * @param options - Additional fetch options if search parameters are provided as the second argument.
  *
+ * Return value
  * @returns An object containing:
  * - `data`: The response data or `null`.
  * - `loading`: Boolean indicating if the request is in progress.
@@ -132,12 +137,23 @@ export function useFetch<TResponse = any, TBody = any>(
  * - `statusCode`: HTTP status code or `null`.
  * - `fetch`: Function to manually trigger the fetch with optional override options.
  *
- * @example
+ * Override behavior
+ * - The `fetch` function accepts `overrideOptions?: FetchOptions<TBody>`. If `overrideOptions.url` is
+ *   provided, that URL will be used instead of the initial `url` passed to the hook. The hook will still
+ *   append the memoized search parameters (if any) to the final request URL.
+ * - When a 401 response triggers a token refresh, the same (possibly overridden) URL is used for the retry
+ *   attempt.
+ *
+ * Examples
  * ```tsx
+ * // Use hook with a fixed URL
  * const { data, loading, error, fetch } = useFetch<User[]>('/api/users');
+ *
+ * // Call fetch and override the url for this request only
+ * fetch({ url: '/api/admin/users', method: 'GET' });
  * ```
  *
- * @remarks
+ * Remarks
  * - Automatically attaches `Authorization` header using `access_token` cookie.
  * - If a 401 response is received and a `refresh_token` cookie exists, attempts to refresh the token and retry.
  * - Redirects to sign-in page on permission errors or expired refresh tokens.
@@ -211,18 +227,21 @@ export function useFetch<TResponse = any, TBody = any>(
 			statusCode: null,
 		}));
 
-		const mergedOptions = {
-			...finalOptions,
-			...overrideOptions,
-			headers: {
-				...finalOptions?.headers,
-				...overrideOptions?.headers,
-			},
-			body: overrideOptions?.body ?? rawOptions?.body,
-		};
+			const mergedOptions = {
+				...finalOptions,
+				...overrideOptions,
+				headers: {
+					...finalOptions?.headers,
+					...overrideOptions?.headers,
+				},
+				body: overrideOptions?.body ?? rawOptions?.body,
+			};
+
+			// allow overrideOptions to replace the initial url
+			const requestUrl = mergedOptions.url ?? url;
 
 		try {
-			const response = await fetch(parseURL(url, memoizedSearchParams), {
+			const response = await fetch(parseURL(requestUrl, memoizedSearchParams), {
 				method: mergedOptions.method ?? "GET",
 				headers: {
 					...(mergedOptions.options?.removeContentType
@@ -239,7 +258,7 @@ export function useFetch<TResponse = any, TBody = any>(
 			if (response.status === 401 && hasCookie("refresh_token")) {
 				await refreshToken();
 
-				const retryResponse = await fetch(parseURL(url, memoizedSearchParams), {
+				const retryResponse = await fetch(parseURL(requestUrl, memoizedSearchParams), {
 					method: mergedOptions.method ?? "GET",
 					headers: {
 						...(mergedOptions.options?.removeContentType

@@ -1,6 +1,7 @@
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 interface FetchOptions<TBody> {
     method?: HttpMethod;
+    url?: string;
     body?: TBody;
     headers?: HeadersInit;
     skip?: boolean;

@@ -123,8 +123,9 @@ function useFetch(url, searchParamsOrOptions, options) {
       },
       body: overrideOptions?.body ?? rawOptions?.body
     };
+    const requestUrl = mergedOptions.url ?? url;
     try {
-      const response = await fetch(parseURL(url, memoizedSearchParams), {
+      const response = await fetch(parseURL(requestUrl, memoizedSearchParams), {
         method: mergedOptions.method ?? "GET",
         headers: {
           ...mergedOptions.options?.removeContentType ? {} : { "Content-Type": "application/json" },
@@ -135,7 +136,7 @@ function useFetch(url, searchParamsOrOptions, options) {
       });
       if (response.status === 401 && (0, import_cookies_next.hasCookie)("refresh_token")) {
         await refreshToken();
-        const retryResponse = await fetch(parseURL(url, memoizedSearchParams), {
+        const retryResponse = await fetch(parseURL(requestUrl, memoizedSearchParams), {
           method: mergedOptions.method ?? "GET",
           headers: {
             ...mergedOptions.options?.removeContentType ? {} : { "Content-Type": "application/json" },
