@@ -1,6 +1,6 @@
 {
   "name": "hieutndev-toolkit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,8 +9,8 @@
   ],
   "scripts": {
     "clean": "node scripts/clean.js",
-    "build": "yarn clean && tsup hooks/* --dts --format esm,cjs --outDir dist/hooks && tsup utils/* --dts --format esm,cjs --outDir dist/utils && node scripts/generate-index.js",
-    "build:watch": "yarn clean && tsup hooks/* utils/* --dts --format esm,cjs --outDir dist --watch && node scripts/generate-index.js"
+    "build": "yarn clean && tsup src/hooks/* --dts --format esm,cjs --outDir dist/hooks && tsup src/utils/* --dts --format esm,cjs --outDir dist/utils && node scripts/generate-index.js",
+    "build:watch": "yarn clean && tsup src/hooks/* src/utils/* --dts --format esm,cjs --outDir dist --watch && node scripts/generate-index.js"
   },
   "repository": {
     "type": "git",
