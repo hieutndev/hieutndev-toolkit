@@ -23,7 +23,7 @@ __export(serverFetch_exports, {
   serverFetch: () => serverFetch
 });
 module.exports = __toCommonJS(serverFetch_exports);
-var BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+var BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL || process.env.BASE_API_URL;
 async function serverFetch(endpoint, options = {}) {
   const {
     method = "GET",
@@ -33,7 +33,7 @@ async function serverFetch(endpoint, options = {}) {
     revalidate
   } = options;
   if (!BASE_URL) {
-    throw new Error("NEXT_PUBLIC_BASE_API_URL environment variable is not set");
+    throw new Error("NEXT_PUBLIC_BASE_API_URL/BASE_API_URL environment variable is not set");
   }
   const url = endpoint.startsWith("http") ? endpoint : `${BASE_URL}${endpoint}`;
   const fetchOptions = {

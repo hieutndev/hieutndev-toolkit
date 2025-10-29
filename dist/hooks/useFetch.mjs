@@ -2,6 +2,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { getCookie, hasCookie, setCookie } from "cookies-next";
 var BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL || process.env.BASE_API_URL;
+var FALLBACK_URL_ON_TOKEN_EXPIRED = process.env.NEXT_PUBLIC_FALLBACK_URL_ON_TOKEN_EXPIRED || process.env.FALLBACK_URL_ON_TOKEN_EXPIRED || "/";
+var REFRESH_TOKEN_ENDPOINT = process.env.NEXT_PUBLIC_REFRESH_TOKEN_ENDPOINT || process.env.REFRESH_TOKEN_ENDPOINT;
 var buildQueryString = (params) => {
   const searchParams = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
@@ -37,10 +39,6 @@ var parseURL = (url, searchParams) => {
   return baseUrl;
 };
 async function refreshToken() {
-  const REFRESH_TOKEN_ENDPOINT = process.env.NEXT_PUBLIC_REFRESH_TOKEN_ENDPOINT || process.env.REFRESH_TOKEN_ENDPOINT;
-  if (!REFRESH_TOKEN_ENDPOINT) {
-    throw new Error("REFRESH_TOKEN_ENDPOINT is not defined");
-  }
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("x-rftk", getCookie("refresh_token") || "");
@@ -56,7 +54,12 @@ async function refreshToken() {
 }
 function useFetch(url, searchParamsOrOptions, options) {
   if (!BASE_URL) {
-    throw new Error("NEXT_PUBLIC_BASE_API_URL is not defined");
+    throw new Error("NEXT_PUBLIC_BASE_API_URL/BASE_API_URL is not defined");
+  }
+  if (!REFRESH_TOKEN_ENDPOINT) {
+    throw new Error(
+      "NEXT_PUBLIC_REFRESH_TOKEN_ENDPOINT/REFRESH_TOKEN_ENDPOINT is not defined"
+    );
   }
   const isSearchParams = searchParamsOrOptions && typeof searchParamsOrOptions === "object" && !("method" in searchParamsOrOptions) && !("body" in searchParamsOrOptions) && !("headers" in searchParamsOrOptions) && !("skip" in searchParamsOrOptions) && !("options" in searchParamsOrOptions);
   const searchParams = isSearchParams ? searchParamsOrOptions : void 0;
@@ -147,6 +150,10 @@ function useFetch(url, searchParamsOrOptions, options) {
           error: null,
           statusCode: retryResponse.status
         });
+        return;
+      }
+      if (response.status === 401 && !hasCookie("refresh_token")) {
+        window.location.href = FALLBACK_URL_ON_TOKEN_EXPIRED;
         return;
       }
       if (!response.ok) {

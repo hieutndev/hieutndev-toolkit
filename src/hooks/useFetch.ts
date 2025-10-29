@@ -4,6 +4,15 @@ import { getCookie, hasCookie, setCookie } from "cookies-next";
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_API_URL || process.env.BASE_API_URL;
 
+const FALLBACK_URL_ON_TOKEN_EXPIRED =
+  process.env.NEXT_PUBLIC_FALLBACK_URL_ON_TOKEN_EXPIRED ||
+  process.env.FALLBACK_URL_ON_TOKEN_EXPIRED ||
+  "/";
+
+const REFRESH_TOKEN_ENDPOINT =
+  process.env.NEXT_PUBLIC_REFRESH_TOKEN_ENDPOINT ||
+  process.env.REFRESH_TOKEN_ENDPOINT;
+
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 interface FetchOptions<TBody> {
@@ -78,14 +87,6 @@ const parseURL = (url: string, searchParams?: SearchParams) => {
 };
 
 async function refreshToken() {
-  const REFRESH_TOKEN_ENDPOINT =
-    process.env.NEXT_PUBLIC_REFRESH_TOKEN_ENDPOINT ||
-    process.env.REFRESH_TOKEN_ENDPOINT;
-
-  if (!REFRESH_TOKEN_ENDPOINT) {
-    throw new Error("NEXT_PUBLIC_REFRESH_TOKEN_ENDPOINT/REFRESH_TOKEN_ENDPOINT is not defined");
-  }
-
   const headers = new Headers();
 
   headers.append("Content-Type", "application/json");
@@ -175,6 +176,12 @@ export function useFetch<TResponse = any, TBody = any>(
 ) {
   if (!BASE_URL) {
     throw new Error("NEXT_PUBLIC_BASE_API_URL/BASE_API_URL is not defined");
+  }
+
+  if (!REFRESH_TOKEN_ENDPOINT) {
+    throw new Error(
+      "NEXT_PUBLIC_REFRESH_TOKEN_ENDPOINT/REFRESH_TOKEN_ENDPOINT is not defined"
+    );
   }
 
   // Determine if the second parameter is searchParams or options
@@ -309,6 +316,11 @@ export function useFetch<TResponse = any, TBody = any>(
           statusCode: retryResponse.status,
         });
 
+        return;
+      }
+
+      if (response.status === 401 && !hasCookie("refresh_token")) {
+        window.location.href = FALLBACK_URL_ON_TOKEN_EXPIRED;
         return;
       }
 
