@@ -18,7 +18,7 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// hooks/useScroll.ts
+// src/hooks/useScroll.ts
 var useScroll_exports = {};
 __export(useScroll_exports, {
   Axis: () => Axis,

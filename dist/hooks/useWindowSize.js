@@ -18,7 +18,7 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// hooks/useWindowSize.ts
+// src/hooks/useWindowSize.ts
 var useWindowSize_exports = {};
 __export(useWindowSize_exports, {
   useWindowSize: () => useWindowSize

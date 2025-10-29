@@ -17,7 +17,7 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// hooks/serverFetch.ts
+// src/hooks/serverFetch.ts
 var serverFetch_exports = {};
 __export(serverFetch_exports, {
   serverFetch: () => serverFetch

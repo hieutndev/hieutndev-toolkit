@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL || process.env.BASE_API_URL;
 
 interface serverFetchOptions {
     method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -21,7 +21,7 @@ export async function serverFetch<T>(
     } = options;
 
     if (!BASE_URL) {
-        throw new Error("NEXT_PUBLIC_BASE_API_URL environment variable is not set");
+        throw new Error("NEXT_PUBLIC_BASE_API_URL/BASE_API_URL environment variable is not set");
     }
 
     const url = endpoint.startsWith("http") ? endpoint : `${BASE_URL}${endpoint}`;

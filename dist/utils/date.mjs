@@ -1,6 +1,6 @@
 import "./chunk-Y6FXYEAI.mjs";
 
-// utils/date.ts
+// src/utils/date.ts
 function getTimeAgoString(isoStringTime) {
   const lastUpdatedTime = new Date(isoStringTime);
   const currentTime = /* @__PURE__ */ new Date();

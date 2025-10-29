@@ -17,7 +17,7 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// hooks/useLocalStorage.ts
+// src/hooks/useLocalStorage.ts
 var useLocalStorage_exports = {};
 __export(useLocalStorage_exports, {
   useLocalStorage: () => useLocalStorage

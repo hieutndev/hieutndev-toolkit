@@ -2,7 +2,7 @@ import {
   __require
 } from "./chunk-Y6FXYEAI.mjs";
 
-// utils/string.ts
+// src/utils/string.ts
 function emailMasking(email, localChars, domainChars) {
   if (!email.includes("@")) {
     return "Invalid email";

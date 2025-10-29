@@ -1,6 +1,6 @@
 "use client";
 
-// hooks/useScroll.ts
+// src/hooks/useScroll.ts
 import { useState, useRef, useCallback, useEffect } from "react";
 var Axis = /* @__PURE__ */ ((Axis2) => {
   Axis2["X"] = "x";

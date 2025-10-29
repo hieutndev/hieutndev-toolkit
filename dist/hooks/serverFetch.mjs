@@ -1,4 +1,4 @@
-// hooks/serverFetch.ts
+// src/hooks/serverFetch.ts
 var BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
 async function serverFetch(endpoint, options = {}) {
   const {

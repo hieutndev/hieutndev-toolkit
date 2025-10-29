@@ -1,7 +1,7 @@
-// hooks/useFetch.ts
+// src/hooks/useFetch.ts
 import { useEffect, useState, useMemo } from "react";
 import { getCookie, hasCookie, setCookie } from "cookies-next";
-var BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+var BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL || process.env.BASE_API_URL;
 var buildQueryString = (params) => {
   const searchParams = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
@@ -37,10 +37,14 @@ var parseURL = (url, searchParams) => {
   return baseUrl;
 };
 async function refreshToken() {
+  const REFRESH_TOKEN_ENDPOINT = process.env.NEXT_PUBLIC_REFRESH_TOKEN_ENDPOINT || process.env.REFRESH_TOKEN_ENDPOINT;
+  if (!REFRESH_TOKEN_ENDPOINT) {
+    throw new Error("REFRESH_TOKEN_ENDPOINT is not defined");
+  }
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("x-rftk", getCookie("refresh_token") || "");
-  const response = await fetch(`${BASE_URL}/accounts/rftk`, {
+  const response = await fetch(`${BASE_URL}${REFRESH_TOKEN_ENDPOINT}`, {
     method: "GET",
     headers
   });
@@ -112,15 +116,18 @@ function useFetch(url, searchParamsOrOptions, options) {
       });
       if (response.status === 401 && hasCookie("refresh_token")) {
         await refreshToken();
-        const retryResponse = await fetch(parseURL(requestUrl, memoizedSearchParams), {
-          method: mergedOptions.method ?? "GET",
-          headers: {
-            ...mergedOptions.options?.removeContentType ? {} : { "Content-Type": "application/json" },
-            Authorization: `Bearer ${getCookie("access_token") || ""}`,
-            ...mergedOptions.headers || {}
-          },
-          body: mergedOptions.body ? parseFetchBody(mergedOptions.body) : void 0
-        });
+        const retryResponse = await fetch(
+          parseURL(requestUrl, memoizedSearchParams),
+          {
+            method: mergedOptions.method ?? "GET",
+            headers: {
+              ...mergedOptions.options?.removeContentType ? {} : { "Content-Type": "application/json" },
+              Authorization: `Bearer ${getCookie("access_token") || ""}`,
+              ...mergedOptions.headers || {}
+            },
+            body: mergedOptions.body ? parseFetchBody(mergedOptions.body) : void 0
+          }
+        );
         if (!retryResponse.ok) {
           const errorText = await retryResponse.text();
           const defaultErrorMessage = "Server error occurred, please try again later or contact admin for more details";
@@ -157,9 +164,6 @@ function useFetch(url, searchParamsOrOptions, options) {
           error: errorMessage,
           statusCode: response.status
         });
-        if (errorJson.message === "NO_PERMISSION") {
-          window.location.href = "/sign-in?message=NO_PERMISSION";
-        }
         return;
       }
       const data = await response.json();
@@ -170,14 +174,14 @@ function useFetch(url, searchParamsOrOptions, options) {
         statusCode: response.status
       });
     } catch (error) {
-      if (error.message === "RefreshTokenExpiredError") {
-        setState({ data: null, loading: false, error: null, statusCode: null });
-        window.location.href = "/sign-in?message=EXPIRED_REFRESH_TOKEN";
-      } else {
-        const defaultErrorMessage = "Server error occurred, please try again later or contact admin for more details";
-        const errorMessage = error.message || defaultErrorMessage;
-        setState({ data: null, loading: false, error: errorMessage, statusCode: null });
-      }
+      const defaultErrorMessage = "Server error occurred, please try again later or contact admin for more details";
+      const errorMessage = error.message || defaultErrorMessage;
+      setState({
+        data: null,
+        loading: false,
+        error: errorMessage,
+        statusCode: null
+      });
     }
   };
   useEffect(() => {

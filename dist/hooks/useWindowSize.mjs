@@ -1,6 +1,6 @@
 "use client";
 
-// hooks/useWindowSize.ts
+// src/hooks/useWindowSize.ts
 import { useState, useEffect } from "react";
 function useWindowSize() {
   const [screenSize, setScreenSize] = useState({
