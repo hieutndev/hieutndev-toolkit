@@ -76,6 +76,7 @@ async function refreshToken() {
   }
   const data = await response.json();
   (0, import_cookies_next.setCookie)("access_token", data.results.access_token, { path: "/" });
+  (0, import_cookies_next.setCookie)("refresh_token", data.results.refresh_token, { path: "/" });
 }
 function useFetch(url, searchParamsOrOptions, options) {
   if (!BASE_URL) {
