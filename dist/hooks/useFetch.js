@@ -66,6 +66,7 @@ async function refreshToken() {
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("x-rftk", (0, import_cookies_next.getCookie)("refresh_token") || "");
+  headers.append("Authorization", `Bearer ${(0, import_cookies_next.getCookie)("refresh_token") || ""}`);
   const response = await fetch(`${BASE_URL}${REFRESH_TOKEN_ENDPOINT}`, {
     method: "GET",
     headers

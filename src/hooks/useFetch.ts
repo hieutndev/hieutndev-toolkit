@@ -91,6 +91,7 @@ async function refreshToken() {
 
   headers.append("Content-Type", "application/json");
   headers.append("x-rftk", (getCookie("refresh_token") as string) || "");
+  headers.append("Authorization", `Bearer ${getCookie("refresh_token") || ""}`);
 
   const response = await fetch(`${BASE_URL}${REFRESH_TOKEN_ENDPOINT}`, {
     method: "GET",
