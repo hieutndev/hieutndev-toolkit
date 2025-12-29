@@ -30,7 +30,7 @@ export async function serverFetch<T>(
         method,
         headers: {
             "Content-Type": "application/json",
-            "x-TimeZone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+            "x-time-zone": Intl.DateTimeFormat().resolvedOptions().timeZone,
             ...headers,
         },
         cache,
