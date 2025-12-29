@@ -40,6 +40,7 @@ async function serverFetch(endpoint, options = {}) {
     method,
     headers: {
       "Content-Type": "application/json",
+      "x-TimeZone": Intl.DateTimeFormat().resolvedOptions().timeZone,
       ...headers
     },
     cache,
