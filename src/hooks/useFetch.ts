@@ -265,7 +265,7 @@ export function useFetch<TResponse = any, TBody = any>(
             ? {}
             : { "Content-Type": "application/json" }),
           Authorization: `Bearer ${getCookie("access_token") || ""}`,
-          "x-timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+          "x-TimeZone": Intl.DateTimeFormat().resolvedOptions().timeZone,
           ...(mergedOptions.headers || {}),
         },
         body: mergedOptions.body
@@ -285,7 +285,7 @@ export function useFetch<TResponse = any, TBody = any>(
                 ? {}
                 : { "Content-Type": "application/json" }),
               Authorization: `Bearer ${getCookie("access_token") || ""}`,
-              "x-timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+              "x-TimeZone": Intl.DateTimeFormat().resolvedOptions().timeZone,
               ...(mergedOptions.headers || {}),
             },
             body: mergedOptions.body

@@ -115,7 +115,7 @@ function useFetch(url, searchParamsOrOptions, options) {
         headers: {
           ...mergedOptions.options?.removeContentType ? {} : { "Content-Type": "application/json" },
           Authorization: `Bearer ${getCookie("access_token") || ""}`,
-          "x-timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+          "x-TimeZone": Intl.DateTimeFormat().resolvedOptions().timeZone,
           ...mergedOptions.headers || {}
         },
         body: mergedOptions.body ? parseFetchBody(mergedOptions.body) : void 0
@@ -129,7 +129,7 @@ function useFetch(url, searchParamsOrOptions, options) {
             headers: {
               ...mergedOptions.options?.removeContentType ? {} : { "Content-Type": "application/json" },
               Authorization: `Bearer ${getCookie("access_token") || ""}`,
-              "x-timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+              "x-TimeZone": Intl.DateTimeFormat().resolvedOptions().timeZone,
               ...mergedOptions.headers || {}
             },
             body: mergedOptions.body ? parseFetchBody(mergedOptions.body) : void 0
